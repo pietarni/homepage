@@ -1,0 +1,841 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="./assets/gfx/icon.webp" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>i l l y  t h i n g s . x y z</title>
+    <meta name="description" content="Silly Things - Portfolio & Projects">
+    <style>
+      :root {
+        --bg-color: #0B1523;
+        --card-bg: #152233;
+        --text-main: #f0f4f8;
+        --text-muted: #94a3b8;
+        --accent: #64ffda;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background-color: transparent;
+        color: var(--text-main);
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        overflow-x: hidden;
+      }
+
+      a { color: inherit; text-decoration: none; }
+      
+      #bg-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -2;
+        opacity: 0.6; /* adjust visibility */
+      }
+
+      #bg-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(11, 21, 35, 0.65); /* Opacity adjusted to 0.65 */
+        z-index: -1;
+        backdrop-filter: blur(3px);
+      }
+
+      /* Navigation */
+      nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        z-index: 100;
+        mix-blend-mode: exclusion;
+      }
+      
+      nav a {
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.9rem;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+      }
+      
+      nav a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
+
+      /* Hero Section */
+      .hero {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      /* Rock Animation Styles */
+      .rock-stack {
+        position: relative;
+        width: min(90vw, 600px);
+        aspect-ratio: 3 / 4;
+        transition: transform 0.1s;
+        cursor: pointer;
+      }
+
+      .rock-layer {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        pointer-events: none;
+        will-change: transform;
+      }
+
+      #rock-bg {
+        opacity: 0.925;
+        mix-blend-mode: screen;
+        --hue: 0deg;
+        filter: hue-rotate(var(--hue));
+      }
+
+      #rock-main {
+        opacity: 1;
+        pointer-events: auto;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .rock-stack:hover #rock-main {
+        transform: scale(1.05) rotate(2deg);
+      }
+
+      #rock-light {
+        opacity: 0.6;
+        mix-blend-mode: screen;
+        --hue: 0deg;
+        filter: hue-rotate(var(--hue));
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .rock-stack:hover #rock-light {
+        transform: scale(1.15);
+      }
+
+      .scroll-indicator {
+        position: absolute;
+        bottom: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        animation: bounce 2s infinite;
+        opacity: 0.6;
+      }
+
+      .scroll-indicator span {
+        font-size: 0.8rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+
+      .scroll-indicator svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      /* Hero info hints */
+      .hero-hints {
+        position: absolute;
+        bottom: 15%;
+        display: flex;
+        gap: 3rem;
+        font-size: 0.85rem;
+        color: rgba(255,255,255,0.5);
+        letter-spacing: 0.1em;
+      }
+
+      .hero-hints a {
+        transition: color 0.2s;
+      }
+
+      .hero-hints a:hover {
+        color: #fff;
+      }
+
+      @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+        40% {transform: translateY(-10px);}
+        60% {transform: translateY(-5px);}
+      }
+
+      /* About Section */
+      .about-container {
+        display: flex;
+        align-items: center;
+        gap: 3rem;
+        padding: 4rem 0;
+        position: relative;
+      }
+
+      .about-text {
+        flex: 1;
+        z-index: 1;
+      }
+
+      .about-image {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        perspective: 1000px;
+      }
+
+      .about-image img {
+        max-width: 100%;
+        height: auto;
+        filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+        transform: rotateY(-5deg);
+        transition: transform 0.3s;
+      }
+
+      .about-image img:hover {
+        transform: rotateY(0deg) scale(1.02);
+      }
+
+      @media (max-width: 768px) {
+        .about-container {
+          flex-direction: column-reverse;
+          text-align: center;
+        }
+      }
+
+      /* Main Content */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      section {
+        padding: 6rem 0;
+      }
+
+      h2 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        margin-bottom: 2rem;
+        background: linear-gradient(to right, #fff, #94a3b8);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      p {
+        line-height: 1.6;
+        color: var(--text-muted);
+        font-size: 1.1rem;
+      }
+
+      /* Helsinki Feature */
+      .helsinki-showcase {
+        display: grid;
+        gap: 3rem;
+      }
+
+      .helsinki-text {
+        max-width: 800px;
+      }
+
+      .helsinki-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1rem;
+      }
+
+      .gallery-item {
+        aspect-ratio: 16/9;
+        background: #222;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+        transition: transform 0.3s;
+      }
+
+      .gallery-item:hover {
+        transform: scale(1.02);
+        z-index: 2;
+      }
+
+      .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      /* Project Grid */
+      .project-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+      }
+
+      .project-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.05);
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .project-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        border-color: rgba(255,255,255,0.1);
+      }
+
+      .card-image {
+        height: 200px;
+        background: #000;
+        overflow: hidden;
+      }
+
+      .card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s;
+      }
+
+      .project-card:hover .card-image img {
+        transform: scale(1.1);
+      }
+
+      .card-content {
+        padding: 1.5rem;
+      }
+
+      .card-title {
+        font-size: 1.4rem;
+        margin: 0 0 0.5rem 0;
+        color: #fff;
+      }
+
+      .card-tags {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .tag {
+        font-size: 0.75rem;
+        background: rgba(255,255,255,0.1);
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        color: var(--text-muted);
+      }
+
+      .social-links {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+      }
+      
+      .social-links a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+        transition: all 0.3s ease;
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.1);
+      }
+      
+      .social-links a:hover {
+        background: #fff;
+        color: var(--bg-color);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      }
+
+      .social-links svg {
+        width: 24px;
+        height: 24px;
+        fill: currentColor;
+      }
+
+      .text-break-image {
+        margin: 3rem 0;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      }
+
+      .text-break-image img {
+        width: 100%;
+        display: block;
+        height: auto;
+      }
+
+      /* Carousel */
+      .carousel-container {
+        position: relative;
+        width: 100%;
+        max-width: 900px;
+        margin: 3rem auto;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        aspect-ratio: 16/9;
+      }
+
+      .carousel-track {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+        height: 100%;
+      }
+
+      .carousel-slide {
+        min-width: 100%;
+        height: 100%;
+      }
+
+      .carousel-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .carousel-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0,0,0,0.5);
+        border: none;
+        color: white;
+        padding: 1rem;
+        cursor: pointer;
+        z-index: 10;
+        transition: background 0.2s;
+      }
+
+      .carousel-btn:hover {
+        background: rgba(0,0,0,0.8);
+      }
+
+      .carousel-btn.prev { left: 0; }
+      .carousel-btn.next { right: 0; }
+
+      .carousel-dots {
+        position: absolute;
+        bottom: 1rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.5);
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .dot.active {
+        background: white;
+      }
+
+      footer {
+        text-align: center;
+        padding: 4rem 0;
+        opacity: 0.5;
+        font-size: 0.9rem;
+      }
+
+    </style>
+  </head>
+  <body>
+
+    <video id="bg-video" autoplay loop muted playsinline>
+      <source src="./assets/gfx/bgvid_compressed.mp4" type="video/mp4">
+    </video>
+    <div id="bg-overlay"></div>
+
+    <nav>
+      <a href="#helsinki">The City</a>
+      <a href="#projects">Projects</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="hero">
+      <div class="rock-stack" id="rock-stack">
+        <img id="rock-bg" class="rock-layer" src="./assets/gfx/additive_light_bg.webp" alt="light">
+        <img id="rock-main" class="rock-layer" src="./assets/gfx/justrock.webp" alt="rock">
+        <img id="rock-text" class="rock-layer" src="./assets/gfx/text.webp" alt="text">
+        <img id="rock-light" class="rock-layer" src="./assets/gfx/rocklight.webp" alt="glow">
+      </div>
+      <div class="hero-hints">
+        <a href="#helsinki">Helsinki City Model</a>
+        <span>•</span>
+        <a href="#projects">Games & Projects</a>
+        <span>•</span>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="scroll-indicator">
+        <span>Scroll</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="container">
+      
+      <section id="helsinki">
+        <div class="helsinki-showcase">
+          <div class="helsinki-text">
+            <h2>The Entire Helsinki</h2>
+            <p style="font-size: 1.4rem; color: #fff; margin-bottom: 1rem;">
+              A 1:1 scale digital twin of Helsinki.
+            </p>
+            <p>
+              This project showcases a highly optimized open-world environment running in the Unity game engine. 
+              It represents a massive technical achievement in visualizing urban open data, designed for both performance and fidelity.
+            </p>
+
+            <div style="margin: 2rem 0;">
+              <h3 style="color: #fff; margin-bottom: 1rem; font-size: 1.2rem;">Key Features</h3>
+              <ul style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.5rem; padding-left: 1.2rem; color: var(--text-muted);">
+                <li>Dynamic weather systems & seasons</li>
+                <li>Realistic day/night cycles</li>
+                <li>Flowing rivers & underwater depth</li>
+                <li>Accurate vegetation placement</li>
+                <li>Simple traffic simulation</li>
+                <li>90+ different terrain materials</li>
+                <li>85,000 buildings with procedural materials</li>
+                <li>Detailed street furniture (lights, benches)</li>
+                <li>Scalability and editability</li>
+              </ul>
+            </div>
+
+            <!-- Carousel 1 -->
+            <div class="carousel-container" id="carousel-1">
+              <button class="carousel-btn prev">&#10094;</button>
+              <div class="carousel-track"></div>
+              <button class="carousel-btn next">&#10095;</button>
+              <div class="carousel-dots"></div>
+            </div>
+
+            <div style="margin: 2rem 0;">
+              <h3 style="color: #fff; margin-bottom: 1rem; font-size: 1.2rem;">Potential Applications</h3>
+              <p style="margin-bottom: 0.5rem;">
+                Beyond visual spectacle, this platform serves as a versatile foundation for:
+              </p>
+              <ul style="padding-left: 1.2rem; color: var(--text-muted);">
+                <li>Microclimate and lighting simulations</li>
+                <li>Urban planning and visualization</li>
+                <li>Video games, E-tourism, and Virtual Reality</li>
+                <li>WFS data overlay and analysis</li>
+              </ul>
+            </div>
+
+            <!-- Carousel 2 -->
+            <div class="carousel-container" id="carousel-2">
+              <button class="carousel-btn prev">&#10094;</button>
+              <div class="carousel-track"></div>
+              <button class="carousel-btn next">&#10095;</button>
+              <div class="carousel-dots"></div>
+            </div>
+
+            <div style="margin: 2rem 0;">
+              <h3 style="color: #fff; margin-bottom: 1rem; font-size: 1.2rem;">Technical Approach</h3>
+              <p>
+                Built on Helsinki's extensive open data, the project utilizes LiDAR data for precise terrain, water levels, bridges, and canopy models. 
+                Terrain materials are sourced from the <em>Yleisten Alueiden Rekisteri</em> (hri.fi, kartta.hel.fi), while street furniture data populates the scene with realistic detail.
+              </p>
+              <p style="margin-top: 1rem;">
+                A key innovation involved using LLMs to transform messy photogrammetry facade textures into clean, data-based procedural materials—ensuring precision, efficiency, and complete control over the aesthetic.
+                While some areas may still appear rough due to the fully automated nature of the pipeline, achieving this level of fidelity without manual artist intervention represents a significant leap forward.
+                While built for Helsinki, the pipeline is designed to be scalable to other cities.
+              </p>
+            </div>
+
+            <div style="margin: 2rem 0;">
+              <h3 style="color: #fff; margin-bottom: 1rem; font-size: 1.2rem;">The Story</h3>
+              <p>
+                The concept began in 2022 during my civil service work for the City of Helsinki. In early 2025, I revisited the idea, fueling an intense 18-hour development sprint where I worked without a single break, even eating in front of the computer—such is my obsession. This effort resulted in a proof-of-concept. 
+                This led to a collaboration with the city on a demo version. Since then, I've rewritten the core systems to maximize performance and visual fidelity.
+              </p>
+            </div>
+
+            <!-- Carousel 3 -->
+            <div class="carousel-container" id="carousel-3">
+              <button class="carousel-btn prev">&#10094;</button>
+              <div class="carousel-track"></div>
+              <button class="carousel-btn next">&#10095;</button>
+              <div class="carousel-dots"></div>
+            </div>
+
+            <div class="card-tags" style="margin-top: 1.5rem;">
+              <span class="tag">Unity</span>
+              <span class="tag">C#</span>
+              <span class="tag">Open World</span>
+              <span class="tag">LiDAR</span>
+              <span class="tag">Open Data</span>
+            </div>
+
+            <div class="helsinki-credits" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+              <h4 style="color: rgba(255,255,255,0.7); margin-bottom: 0.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">Credits & Data Sources</h4>
+              <p>
+                <strong>Open Data:</strong> Utilizes open data from <em>Helsinki Region Infoshare (HRI)</em> licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="text-decoration: underline;">CC BY 4.0</a>, including LiDAR, Yleisten alueiden rekisteri, Helsinki City GML City Model, and HSY Maanpeiteaineisto.
+              </p>
+              <p style="margin-top: 0.8rem;">
+                <strong>3D Assets:</strong><br>
+                • <a href="https://skfb.ly/6sUFy" target="_blank" style="text-decoration: underline;">"Generic passenger car pack"</a> by Comrade1280 is licensed under <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" style="text-decoration: underline;">CC BY 4.0</a>.<br>
+                • Rocks HD Pack by <a href="https://rompasstudio.onepage.me/" target="_blank" style="text-decoration: underline;">ROMPAS studios</a>.
+              </p>
+            </div>
+          </div>
+
+          <div class="helsinki-gallery" style="display: none;">
+             <!-- Old gallery hidden, replaced by carousels -->
+          </div>
+        </div>
+      </section>
+
+      <section id="projects">
+        <h2>Projects</h2>
+        
+        <h3 style="color: #fff; margin-bottom: 1rem; font-size: 1.4rem;">Currently Working On</h3>
+        <div class="project-grid">
+          
+          <article class="project-card">
+            <div class="card-image">
+              <img src="./assets/saunagame.jpg" alt="Sauna Game">
+            </div>
+            <div class="card-content">
+              <h3 class="card-title">Sauna Simulator</h3>
+              <p>Relaxation and steam physics. <a href="https://store.steampowered.com/app/3408560/Saunageddon/" target="_blank" style="text-decoration: underline; color: var(--accent);">Available on Steam</a></p>
+            </div>
+          </article>
+
+        </div>
+
+        <h3 style="color: #fff; margin: 4rem 0 1rem 0; font-size: 1.4rem;">Old Projects</h3>
+        <div class="project-grid">
+          
+          <article class="project-card">
+            <div class="card-image">
+              <img src="./assets/geokings.png" alt="GeoKings">
+            </div>
+            <div class="card-content">
+              <h3 class="card-title">GeoKings</h3>
+              <p>A territory control game played on a real-world map. I tried to do like a Pokemon Go + Civilization 5 mashup. Well, I learnt a lot.</p>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <div class="card-image">
+              <img src="./assets/marsgame.png" alt="Mars Game">
+            </div>
+            <div class="card-content">
+              <h3 class="card-title">Mars Game</h3>
+              <p>Survival and building on the red planet. My first big project. Worked on it for 14 months and canceled. I was about 14 years old.</p>
+            </div>
+          </article>
+
+          <article class="project-card">
+            <div class="card-image">
+              <img src="./assets/tradegame.png" alt="Trade Game">
+            </div>
+            <div class="card-content">
+              <h3 class="card-title">Procedural Stuff</h3>
+              <p>A lot of my projects always featured procedural generation. Like this one I made when about 16.</p>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+      <section id="about">
+        <div class="about-container">
+          <div class="about-image">
+            <img src="./assets/gfx/boatpic.webp" alt="Me in a boat">
+          </div>
+          <div class="about-text">
+            <h2>Hi</h2>
+            <p>I'm Pietari and I like to create interactive life simulation things.</p>
+            <p>My main project currently is getting this bird game out in some form, just as a way to showcase the cool city model. I think the model has an incredible amount of potential, and over the coming years I'll be exploring those potentials, and improving the model.</p>
+            <p>One of the reasons I really love this work, is that everything I see outside, be it a puddle or a bush, these projects give me reason to deeply analyze them, in order to recreate them. Once I've created it virtually, I feel I sort of own it. Though sometimes it can be a bit taxing.</p>
+            <p>I'm also looking forward to releasing my Sauna game, though who knows when that might happen...</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" style="text-align: center; margin-top: 4rem;">
+        <h2>Get in Touch</h2>
+        <p style="margin: 1rem 0; font-weight: 500; color: #fff;">sillythingsxyz@gmail.com</p>
+        <a href="mailto:sillythingsxyz@gmail.com" style="display: inline-block; background: #fff; color: #000; padding: 1rem 2rem; border-radius: 30px; font-weight: bold; margin-top: 0.5rem;">Email Me</a>
+        
+        <div class="social-links">
+          <a href="https://www.linkedin.com/feed/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/@SillyThingsXYZ" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+            <svg viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+          </a>
+        </div>
+      </section>
+
+    </div>
+
+    <footer>
+      &copy; 2024 sillythings.xyz
+    </footer>
+
+    <script>
+      // Carousel Logic
+      (function() {
+        function initCarousel(containerId, images) {
+          const container = document.getElementById(containerId);
+          if (!container) return;
+
+          const track = container.querySelector('.carousel-track');
+          const dotsNav = container.querySelector('.carousel-dots');
+          const nextButton = container.querySelector('.carousel-btn.next');
+          const prevButton = container.querySelector('.carousel-btn.prev');
+
+          if (!track || !images.length) return;
+
+          // Build slides
+          images.forEach((src, index) => {
+            const slide = document.createElement('div');
+            slide.classList.add('carousel-slide');
+            slide.innerHTML = `<img src="${src}" alt="Helsinki Slide">`;
+            track.appendChild(slide);
+
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (index === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => moveToSlide(index));
+            dotsNav.appendChild(dot);
+          });
+
+          let currentIndex = 0;
+          let autoPlayInterval;
+
+          function moveToSlide(index) {
+            if (index < 0) index = images.length - 1;
+            if (index >= images.length) index = 0;
+            
+            track.style.transform = `translateX(-${index * 100}%)`;
+            currentIndex = index;
+            
+            // Update dots
+            const dots = dotsNav.querySelectorAll('.dot');
+            dots.forEach((d, i) => {
+              d.classList.toggle('active', i === currentIndex);
+            });
+            
+            resetAutoPlay();
+          }
+
+          function resetAutoPlay() {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = setInterval(() => moveToSlide(currentIndex + 1), 5000);
+          }
+
+          nextButton.addEventListener('click', () => moveToSlide(currentIndex + 1));
+          prevButton.addEventListener('click', () => moveToSlide(currentIndex - 1));
+          
+          // Start auto play
+          resetAutoPlay();
+        }
+
+        // Initialize Carousels
+        initCarousel('carousel-1', [
+          './assets/gfx/helsinki_slide_1.webp',
+          './assets/gfx/helsinki_slide_2.webp',
+          './assets/gfx/helsinki_slide_3.webp'
+        ]);
+
+        initCarousel('carousel-2', [
+          './assets/gfx/helsinki_slide_4.webp',
+          './assets/gfx/helsinki_slide_5.webp',
+          './assets/gfx/helsinki_slide_6.webp'
+        ]);
+
+        initCarousel('carousel-3', [
+          './assets/gfx/helsinki_slide_7.webp',
+          './assets/gfx/helsinki_slide_8.webp'
+        ]);
+
+      })();
+
+      // Rock Animation Script (Preserved & Adapted)
+      (function() {
+        const rockStack = document.getElementById('rock-stack');
+        const rockMain = document.getElementById('rock-main');
+        const glowBg = document.getElementById('rock-bg');
+        const glowLight = document.getElementById('rock-light');
+        
+        if (!rockStack || !rockMain || !glowBg || !glowLight) return;
+
+        // Click to scroll to About
+        rockStack.addEventListener('click', () => {
+          document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        let start = performance.now();
+        let flickerSeed = Math.random() * 1000;
+        let currentIntensity = 0.2;
+
+        function tick(now){
+          const t = (now - start) / 1000;
+          const baseHue = (t * 40) % 360;
+          const hueBg = baseHue + 110;
+          const hueLight = baseHue + 130;
+
+          // Flicker logic
+          const flickerT = t * 0.6 + flickerSeed;
+          const n1 = Math.sin(flickerT * 5.0) * 0.5 + 0.5;
+          const n2 = Math.sin(flickerT * 9.1 + 1.7) * 0.5 + 0.5;
+          const n3 = Math.sin(flickerT * 13.7 + 0.4) * 0.5 + 0.5;
+          const combined = (n1 * 0.5 + n2 * 0.3 + n3 * 0.2);
+          const targetIntensity = 0.04 + combined * 0.36;
+
+          currentIntensity += (targetIntensity - currentIntensity) * 0.12;
+
+          const intensityBg = currentIntensity * 0.8;
+          const intensityLight = currentIntensity * 1.1;
+
+          glowBg.style.setProperty('--hue', hueBg + 'deg');
+          glowLight.style.setProperty('--hue', hueLight + 'deg');
+          glowBg.style.opacity = Math.min(1, 0.925 + intensityBg).toFixed(3);
+          glowLight.style.opacity = Math.min(1, 0.6 + intensityLight).toFixed(3);
+
+          requestAnimationFrame(tick);
+        }
+
+        requestAnimationFrame(tick);
+      })();
+    </script>
+  </body>
+</html>

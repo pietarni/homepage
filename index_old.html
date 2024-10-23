@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="./assets/gfx/icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>i l l y  t h i n g s . x y z</title>
+    <style>
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        background-color: #0B1523;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+      }
+
+      .rock-stack {
+        position: relative;
+        margin-top: 0;
+        width: min(90vw, 700px);
+        height: auto;
+        aspect-ratio: 3 / 4;
+      }
+
+      .rock-layer {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        pointer-events: none;
+      }
+
+      .rock-stack.rock-hot {
+        cursor: pointer;
+      }
+
+      #rock-bg {
+        opacity: 0.925; /* 236 / 255 */
+        mix-blend-mode: screen;
+        --hue: 0deg;
+        --intensity: 0;
+        filter: hue-rotate(var(--hue)) brightness(calc(1 + var(--intensity)));
+      }
+
+      #rock-main {
+        opacity: 1;
+        pointer-events: auto; /* only this layer is hoverable/clickable */
+        transition: transform 160ms ease-out;
+      }
+
+      #rock-text {
+        opacity: 1;
+      }
+
+      #rock-light {
+        opacity: 0.643; /* 164 / 255 */
+        mix-blend-mode: screen; /* glow-like */
+        --hue: 0deg;
+        --intensity: 0;
+        filter: hue-rotate(var(--hue)) brightness(calc(1 + var(--intensity)));
+        transition: transform 160ms ease-out;
+      }
+
+      .rock-stack.rock-hot #rock-main,
+      .rock-stack.rock-hot #rock-light {
+        transform: scale(1.05);
+      }
+
+      /* Corner labels */
+      .corners {
+        position: fixed;
+        inset: 0;
+        pointer-events: none; /* let image receive wheel/scroll; items will re-enable */
+      }
+      .corner {
+        position: absolute;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+        font-size: clamp(18px, 1.6vw, 26px);
+        color: rgba(255,255,255,0.9);
+        text-decoration: none;
+        letter-spacing: 0.08em;
+        padding: 0;
+        transform: translate(-50%, -50%) scale(var(--scale, 1));
+        transform-origin: center;
+        transition: transform 120ms ease, color 120ms ease;
+        pointer-events: auto;
+      }
+      .corner:hover {
+        color: #ffffff;
+      }
+      .corner.tl { top: 14%; left: 14%; transform: translate(-50%, -50%) scale(var(--scale,1)); }
+      .corner.tr { top: 14%; right: 14%; transform: translate(50%, -50%) scale(var(--scale,1)); }
+      .corner.bl { bottom: 14%; left: 14%; transform: translate(-50%, 50%) scale(var(--scale,1)); }
+      .corner.br { bottom: 14%; right: 14%; transform: translate(50%, 50%) scale(var(--scale,1)); }
+
+      /* Optional stronger highlight when very close */
+      .corner[data-hot="1"] { color: #ffffff; }
+    </style>
+  </head>
+  <body>
+    <div class="rock-stack" id="rock-stack" aria-label="illy things splash" role="button" tabindex="0">
+      <img
+        id="rock-bg"
+        class="rock-layer"
+        src="./assets/gfx/additive_light_bg.png"
+        alt="background light"
+      >
+      <img
+        id="rock-main"
+        class="rock-layer"
+        src="./assets/gfx/justrock.png"
+        alt="rock"
+      >
+      <img
+        id="rock-text"
+        class="rock-layer"
+        src="./assets/gfx/text.png"
+        alt="i l l y  t h i n g s . x y z text"
+      >
+      <img
+        id="rock-light"
+        class="rock-layer"
+        src="./assets/gfx/rocklight.png"
+        alt="rock light glow"
+      >
+    </div>
+    <div class="corners" id="corners">
+      <a class="corner tl" href="#about">about<br>this place</a>
+      <a class="corner tr" href="#work">video<br>things</a>
+      <a class="corner bl" href="#notes">writing<br>bits</a>
+      <a class="corner br" href="#contact">contact<br>maybe</a>
+    </div>
+    <script>
+      (function() {
+        // Corner proximity scaling
+        const corners = Array.from(document.querySelectorAll('.corner'));
+        const maxBoost = 0.35; // scales up to 1 + maxBoost when very close
+        const hotDistance = 180; // px radius for highlight
+        function updateCorners(e){
+          const x = e.clientX, y = e.clientY;
+          for (const el of corners) {
+            const rect = el.getBoundingClientRect();
+            const cx = rect.left + rect.width/2;
+            const cy = rect.top + rect.height/2;
+            const dx = x - cx, dy = y - cy;
+            const d = Math.hypot(dx, dy);
+            const t = Math.max(0, 1 - d / 300); // proximity falloff
+            const scale = 1 + t * maxBoost;
+            el.style.setProperty('--scale', scale.toFixed(3));
+            el.dataset.hot = (d < hotDistance) ? '1' : '0';
+          }
+        }
+        window.addEventListener('mousemove', updateCorners, { passive: true });
+        // initialize to center
+        updateCorners({ clientX: window.innerWidth/2, clientY: window.innerHeight/2 });
+
+        // Glow hue + intensity animation
+        const glowBg = document.getElementById('rock-bg');
+        const glowLight = document.getElementById('rock-light');
+        const rockStack = document.getElementById('rock-stack');
+        const rockMain = document.getElementById('rock-main');
+        if (!glowBg || !glowLight || !rockStack || !rockMain) return;
+
+        let rockHot = false;
+        function setRockHot(isHot) {
+          if (rockHot === isHot) return;
+          rockHot = isHot;
+          rockStack.classList.toggle('rock-hot', rockHot);
+        }
+
+        rockMain.addEventListener('mousemove', (e) => {
+          const rect = rockMain.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          const dx = e.clientX - cx;
+          const dy = e.clientY - cy;
+
+          // inner box = ~0.33x of rock dimensions, centered
+          const innerW = rect.width * 0.33;
+          const innerH = rect.height * 0.33;
+          const halfW = innerW / 2;
+          const halfH = innerH / 2;
+
+          const inside = (Math.abs(dx) <= halfW) && (Math.abs(dy) <= halfH);
+          setRockHot(inside);
+        });
+
+        rockMain.addEventListener('mouseleave', () => {
+          setRockHot(false);
+        });
+
+        rockMain.addEventListener('click', () => {
+          // placeholder: make this go somewhere later if you like
+        });
+
+        let start = performance.now();
+        let flickerSeed = Math.random() * 1000;
+        let currentIntensity = 0.2; // smoothed intensity value
+
+        function tick(now){
+          const t = (now - start) / 1000; // seconds
+
+          // Faster linear hue shift
+          const baseHue = (t * 40) % 360; // 40 degrees per second
+
+          // Emerald-ish offset for each layer
+          const hueBg = baseHue + 110;
+          const hueLight = baseHue + 130;
+
+          let targetIntensity;
+          if (rockHot) {
+            // When active, stop flicker and go to a strong steady glow
+            targetIntensity = 0.7; // higher constant intensity
+          } else {
+            // Flicker using layered noise (slower but with larger range)
+            const flickerT = t * 0.6 + flickerSeed; // 0.6x speed
+            const n1 = Math.sin(flickerT * 5.0) * 0.5 + 0.5;
+            const n2 = Math.sin(flickerT * 9.1 + 1.7) * 0.5 + 0.5;
+            const n3 = Math.sin(flickerT * 13.7 + 0.4) * 0.5 + 0.5;
+            const combined = (n1 * 0.5 + n2 * 0.3 + n3 * 0.2);
+            targetIntensity = 0.04 + combined * 0.36; // between ~0.04 and ~0.40
+          }
+          // Lerp currentIntensity toward targetIntensity for smooth transitions
+          const lerpFactor = rockHot ? 0.18 : 0.12; // slightly faster when activating
+          currentIntensity += (targetIntensity - currentIntensity) * lerpFactor;
+
+          const intensityBg = currentIntensity * 0.8;
+          const intensityLight = currentIntensity * 1.1;
+
+          glowBg.style.setProperty('--hue', hueBg + 'deg');
+          glowLight.style.setProperty('--hue', hueLight + 'deg');
+          glowBg.style.setProperty('--intensity', intensityBg.toFixed(3));
+          glowLight.style.setProperty('--intensity', intensityLight.toFixed(3));
+
+          requestAnimationFrame(tick);
+        }
+
+        requestAnimationFrame(tick);
+      })();
+    </script>
+  </body>
+</html>
