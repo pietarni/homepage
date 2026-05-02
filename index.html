@@ -162,7 +162,7 @@
         align-items: center;
         text-align: center;
         gap: 2.5rem;
-        padding: 4rem 0;
+        padding: 2rem 0 1rem;
         position: relative;
       }
 
@@ -178,7 +178,7 @@
       }
 
       .about-image img {
-        max-width: min(100%, 420px);
+        max-width: min(100%, 620px);
         height: auto;
         filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
         transform: rotateY(-5deg);
@@ -199,6 +199,15 @@
       section {
         padding: 6rem 0;
         scroll-margin-top: 5rem;
+      }
+
+      #about {
+        padding-bottom: 2rem;
+      }
+
+      #contact {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
       }
 
       #vision {
@@ -416,13 +425,6 @@
         height: auto;
       }
 
-      footer {
-        text-align: center;
-        padding: 4rem 0;
-        opacity: 0.5;
-        font-size: 0.9rem;
-      }
-
       .past-lightbox {
         position: fixed;
         inset: 0;
@@ -514,13 +516,13 @@
 
       <div class="container vision-chapter-body">
         <div class="vision-prose">
-          <p>Two games I'm making alone.</p>
-          <p>One is a sauna game. The saunas are as real as I could make them. The story went somewhere I didn't expect.</p>
+          <p>They're quite unconventional video games.</p>
+          <p>One is a sauna game.</p>
           <p>The other one you play as a bird, living in Helsinki. You try to make up for the actions of your fellow geese.</p>
 
           <h2 id="silly-heading">Why are they silly?</h2>
-          <p>Neither is a smart product decision. Both took way longer than made sense. I put a lot into them anyway.</p>
-          <p>I hope you find something in them.</p>
+          <p>Neither is a smart product decision. Both took way longer than made sense.</p>
+          <p>And really I feel that they'd be more of a hit among aliens, but maybe not so on this planet.</p>
         </div>
       </div>
     </section>
@@ -597,15 +599,10 @@
           <div class="about-image">
             <img src="./assets/gfx/boatpic.webp" alt="Me in a boat">
           </div>
-          <div class="about-text">
-            <h2>Hi,</h2>
-            <p>I'm Pietari.</p>
-            <p>I like nature and all sorts of nice things. I've been making creative tech projects for a long time, and likely will for even longer. I think this is a very interesting time for such things.</p>
-          </div>
         </div>
       </section>
 
-      <section id="contact" style="text-align: center; margin-top: 4rem;">
+      <section id="contact" style="text-align: center;">
         <h2>Get in Touch</h2>
         <p style="margin: 1rem 0; font-weight: 500; color: #fff;">sillythingsxyz@gmail.com</p>
         <a href="mailto:sillythingsxyz@gmail.com" style="display: inline-block; background: #fff; color: #000; padding: 1rem 2rem; border-radius: 30px; font-weight: bold; margin-top: 0.5rem;">Email Me</a>
@@ -621,10 +618,6 @@
       </section>
 
     </div>
-
-    <footer>
-      &copy; 2024 sillythings.xyz
-    </footer>
 
     <div id="past-lightbox" class="past-lightbox" role="dialog" aria-modal="true" aria-label="Enlarged project image" hidden>
       <button type="button" class="past-lightbox-close" aria-label="Close">&times;</button>
