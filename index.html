@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>pietari.makes</title>
     <meta name="description" content="Silly Things - Portfolio & Projects">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500&display=swap" rel="stylesheet" />
     <style>
       :root {
         --bg-color: #000;
@@ -80,12 +83,34 @@
         padding: 2rem 1rem max(1.5rem, env(safe-area-inset-bottom));
       }
 
-      .hero-image-wrap {
+      .hero-center {
         flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(0.85rem, 2.5vh, 1.75rem);
+        min-height: 0;
+        width: 100%;
+      }
+
+      .hero-brand-top,
+      .hero-brand-bottom {
+        margin: 0;
+        text-align: center;
+        font-family: 'Lora', Georgia, 'Times New Roman', serif;
+        font-weight: 400;
+        letter-spacing: 0.02em;
+        text-transform: lowercase;
+        font-size: clamp(2.25rem, 5.5vw, 4rem);
+        color: var(--text-main);
+        line-height: 1.1;
+      }
+
+      .hero-image-wrap {
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 0;
         width: 100%;
       }
 
@@ -109,14 +134,15 @@
         flex-shrink: 0;
         display: flex;
         justify-content: center;
-        gap: 1rem;
-        padding-top: 1.25rem;
+        gap: clamp(1.5rem, 3vw, 2.75rem);
+        padding-top: clamp(1.5rem, 3vh, 2.5rem);
       }
 
       .hero-social-links a {
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 0.35rem;
         color: #fff;
         opacity: 0.85;
         transition: opacity 0.2s ease, transform 0.2s ease;
@@ -128,9 +154,49 @@
       }
 
       .hero-social-links svg {
-        width: 22px;
-        height: 22px;
+        width: clamp(36px, 3.2vmin, 52px);
+        height: clamp(36px, 3.2vmin, 52px);
         fill: currentColor;
+      }
+
+      .hero-current-work {
+        flex-shrink: 0;
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: clamp(1.25rem, 3vh, 2rem);
+        max-width: min(94vw, 44rem);
+        font-family: 'Lora', Georgia, 'Times New Roman', serif;
+        font-weight: 400;
+        font-size: clamp(0.95rem, 1.5vw, 1.125rem);
+        line-height: 1.35;
+        color: var(--text-main);
+        text-transform: lowercase;
+      }
+
+      .hero-current-work-label {
+        margin: 0;
+        flex-shrink: 0;
+      }
+
+      .hero-current-work-list {
+        margin: -0.12em 0 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.05rem;
+        line-height: 1.3;
+      }
+
+      .hero-current-work-list a {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      .hero-current-work-list a:hover {
+        opacity: 0.75;
       }
 
       .hero-chapter-title {
@@ -529,8 +595,19 @@
 
     <section id="vision" aria-labelledby="things-heading">
       <div class="hero">
-        <div class="hero-image-wrap">
-          <img id="hero-image" class="hero-image" src="./assets/gfx/boatpic.webp" alt="Me in a boat">
+        <div class="hero-center">
+          <p class="hero-brand-top">pietari</p>
+          <div class="hero-image-wrap">
+            <img id="hero-image" class="hero-image" src="./assets/gfx/boatpic.webp" alt="Me in a boat">
+          </div>
+          <p class="hero-brand-bottom">makes</p>
+        </div>
+        <div class="hero-current-work">
+          <p class="hero-current-work-label">currently working on:</p>
+          <ul class="hero-current-work-list">
+            <li><a href="https://store.steampowered.com/app/3920070/Rebirdh/" target="_blank" rel="noopener noreferrer">Rebirdh</a></li>
+            <li><a href="https://store.steampowered.com/app/3408560/Saunageddon/" target="_blank" rel="noopener noreferrer">Saunageddon</a></li>
+          </ul>
         </div>
         <div class="hero-social-links" aria-label="Social links">
           <a href="https://www.instagram.com/pietari.makes/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
