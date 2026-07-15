@@ -159,6 +159,26 @@
         fill: currentColor;
       }
 
+      .hero-contact {
+        flex-shrink: 0;
+        margin: clamp(1rem, 2.5vh, 1.75rem) 0 0;
+        font-family: 'Lora', Georgia, 'Times New Roman', serif;
+        font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+        line-height: 1.4;
+        color: var(--text-main);
+        text-align: center;
+        text-transform: lowercase;
+      }
+
+      .hero-contact a {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      .hero-contact a:hover {
+        color: var(--accent);
+      }
+
       .hero-current-work {
         flex-shrink: 0;
         display: flex;
@@ -617,6 +637,7 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.58 7.19a2.74 2.74 0 0 0-1.93-1.94C17.95 4.8 12 4.8 12 4.8s-5.95 0-7.65.45a2.74 2.74 0 0 0-1.93 1.94A28.4 28.4 0 0 0 2 12a28.4 28.4 0 0 0 .42 4.81 2.74 2.74 0 0 0 1.93 1.94c1.7.45 7.65.45 7.65.45s5.95 0 7.65-.45a2.74 2.74 0 0 0 1.93-1.94A28.4 28.4 0 0 0 22 12a28.4 28.4 0 0 0-.42-4.81ZM10 15.2V8.8l5.3 3.2L10 15.2Z"/></svg>
           </a>
         </div>
+        <p class="hero-contact">contact me <a href="mailto:sillythingsxyz@gmail.com">sillythingsxyz@gmail.com</a></p>
         <h2 id="things-heading" class="hero-chapter-title is-hidden">..But what are the things?</h2>
       </div>
 
